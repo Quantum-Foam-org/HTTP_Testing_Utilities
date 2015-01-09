@@ -31,12 +31,6 @@ if (isset($argv[1]) && ($url = filter_var($argv[1], FILTER_VALIDATE_URL))) {
 		if (in_array($v[0], array(CURLINFO_EFFECTIVE_URL, CURLINFO_REDIRECT_COUNT, CURLINFO_REDIRECT_TIME), TRUE)) { 
 			$result =  TRUE; } else { $result = FALSE; } return $result;
 	});
-	$position = array_colum($info, 0);
-	
-	$effectiveUrl = (($i = array_search(CURLINFO_EFFECTIVE_URL, $position, TRUE)) && isset($info[$i]) ? $info[$i] : '');
-	$redirectCount = (($i = array_search(CURLINFO_REDIRECT_COUNT, $position, TRUE)) && isset($info[$i]) ? $info[$i] : '');
-	$redirectTime = (($i = array_search(CURLINFO_REDIRECT_TIME, $position, TRUE)) && isset($info[$i]) ? $info[$i] : '');
-	
 	
 	rewind($fileHeader);
 	$locations = [];
