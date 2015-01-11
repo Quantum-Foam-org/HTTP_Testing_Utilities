@@ -63,8 +63,8 @@ if ($argc > 1) {
 			
 			$curl->run();
 			$response = $curl->getOutput();
-			
-			$info = array_filter($curl->info(), function($v) { 
+			$info = $curl->info();
+			$info = array_filter($info[0], function($v) {
 				if (in_array($v[0], array(CURLINFO_EFFECTIVE_URL, CURLINFO_REDIRECT_COUNT, CURLINFO_REDIRECT_TIME), TRUE)) { 
 					$result =  TRUE; } else { $result = FALSE; } return $result;
 			});

@@ -1,29 +1,25 @@
-HTTP/1.1 302 Moved Temporarily
-Connection: close
-Date: Sun, 11 Jan 2015 01:06:58 GMT
-Server: Microsoft-IIS/6.0
-P3P: CP="DSP CAO CUR ADM DEV TAI PSA PSD IVDi IVAi CONi OUR UNRi BUS NAV COM INT ONL PHY DEM UNI"
-X-Powered-By: ASP.NET
-Set-Cookie: ISMU=true;path=/
-Set-Cookie: USJNTICK=189;domain=.job.com;expires=Tue, 03-Jan-2045 01:06:58 GMT;path=/
-Pragma: no-cache
-location: http://m.job.com
-Cache-Control: no-cache
-Content-Type: text/html; charset=UTF-8
+HTTP/1.1 301 Moved Permanently
+Date: Sun, 11 Jan 2015 01:41:29 GMT
+Server: Server
+Location: http://www.amazon.com/
+Content-Length: 230
+Content-Type: text/html; charset=iso-8859-1
 
 HTTP/1.1 200 OK
-Date: Sun, 11 Jan 2015 01:06:58 GMT
-Server: Apache/2.2.15 (CentOS) DAV/2 mod_ssl/2.2.15 OpenSSL/1.0.1e-fips
-Set-Cookie: PHPSESSID=6v94peuqc0dhokdv9ra9r552q0; path=/
-Expires: Thu, 19 Nov 1981 08:52:00 GMT
-Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
-Pragma: no-cache
-Set-Cookie: rtr=1; expires=Mon, 12-Jan-2015 01:06:58 GMT; path=/; domain=.m.job.com
-Edge-Control: max-age=300
-Set-Cookie: L=Virginia; path=/; domain=.job.com
+Date: Sun, 11 Jan 2015 01:41:29 GMT
+Server: Server
+Set-Cookie: skin=noskin; path=/; domain=.amazon.com
+pragma: no-cache
+x-amz-id-1: 192866EFYM85E7K7320K
+p3p: policyref="http://www.amazon.com/w3c/p3p.xml",CP="CAO DSP LAW CUR ADM IVAo IVDo CONo OTPo OUR DELi PUBi OTRi BUS PHY ONL UNI PUR FIN COM NAV INT DEM CNT STA HEA PRE LOC GOV OTC "
+cache-control: no-cache
+x-frame-options: SAMEORIGIN
+expires: -1
+x-amz-id-2: vWGMp6tT6Nkx6kF1t9EvHeEmNS87RanHAgLQcBQGC+ggQdAl3cApgzdKD0GE51In
 Vary: Accept-Encoding,User-Agent
-GeoIP: Woodbridge,VA,US
-Content-Length: 3855
-Connection: close
-Content-Type: text/html; charset=utf-8
+Content-Type: text/html; charset=UTF-8
+Set-cookie: x-wl-uid=1EKjE0HPhZfH5+UhB0Zfy6YReyA9+wlTiTWBVmMNsZARrhyR7vxXagkP9xyscy7/9HRrfbfF+gAU=; path=/; domain=.amazon.com; expires=Tue, 01-Jan-2036 08:00:01 GMT
+Set-cookie: session-id-time=2082787201l; path=/; domain=.amazon.com; expires=Tue, 01-Jan-2036 08:00:01 GMT
+Set-cookie: session-id=177-7455012-7919123; path=/; domain=.amazon.com; expires=Tue, 01-Jan-2036 08:00:01 GMT
+Transfer-Encoding: chunked
 
