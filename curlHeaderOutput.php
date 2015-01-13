@@ -63,16 +63,18 @@ if ($argc > 1) {
 			
 			$curl->run();
 			$response = $curl->getOutput();
+			
 			$info = $curl->info();
 			$info = array_filter($info[0], function($v) {
 				if (in_array($v[0], array(CURLINFO_EFFECTIVE_URL, CURLINFO_REDIRECT_COUNT, CURLINFO_REDIRECT_TIME), TRUE)) { 
 					$result =  TRUE; } else { $result = FALSE; } return $result;
 			});
+			$curl->close();
 			
 			rewind($fileHeader);
 			$locations = [];
 			while(($row = fgets($fileHeader)) !== FALSE) {
-				if (stripos($row, 'location:') !== FALSE) {
+				if (stripos(trim($row), 'location:') === 0) {
 					$locations[] = trim(str_ireplace('location:', '', $row));
 				}
 			}
