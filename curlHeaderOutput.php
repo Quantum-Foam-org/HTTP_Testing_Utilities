@@ -19,7 +19,7 @@ use \cli\classes as cli;
 
 
 
-\common\Config::init(parse_ini_file(__DIR__.'/config/config.ini', TRUE));
+\common\Config::obj(__DIR__.'/config/config.ini');
 
 
 
