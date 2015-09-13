@@ -33,30 +33,34 @@ if ($uo->startUrl !== null) {
     define('DB_USER_NAME', 'mysql_profile');
     define('DB_USER_PASS', '123jasfuaf835');
 
-
-    $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
-
-    $curl = new curl(FALSE);
-
-    $cookieFile = __DIR__ . '/http_cookies.txt';
-    touch($cookieFile);
-
-    $curl->create();
-
-    $curl->addOption(CURLOPT_URL, $uo->startUrl);
-    $curl->addOption(CURLOPT_RETURNTRANSFER, TRUE);
-    $curl->addOption(CURLOPT_FOLLOWLOCATION, TRUE);
-    $curl->addOption(CURLOPT_COOKIEJAR, $cookieFile);
-    $curl->addOption(CURLOPT_USERAGENT, $ua);
-
-    $curl->run();
-
     class SpiderHTTPUrl {
-
+        
         private static $getContentLimit = 0;
         private static $previousUrls = [];
         
-        function getContent(\common\curl\Main $curl) {
+        public function runCurl($url)
+        {
+            
+            $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
+            
+            $curl = new curl(FALSE);
+            
+            $cookieFile = __DIR__ . '/http_cookies.txt';
+            touch($cookieFile);
+            
+            $curl->create();
+            $curl->addOption(CURLOPT_URL, $url);
+            $curl->addOption(CURLOPT_RETURNTRANSFER, TRUE);
+            $curl->addOption(CURLOPT_FOLLOWLOCATION, TRUE);
+            $curl->addOption(CURLOPT_COOKIEJAR, $cookieFile);
+            $curl->addOption(CURLOPT_USERAGENT, $ua);
+            
+            $curl->run();
+            
+            return $curl;
+        }
+        
+        public function getContent($content = null) {
             global $uo;
             
             if (self::$getContentLimit >= 50000) {
@@ -65,7 +69,7 @@ if ($uo->startUrl !== null) {
                 self::$getContentLimit++;
 
                 $d = new DomDocument();
-                @$d->loadHTML($curl->getOutput()[0][1]);
+                @$d->loadHTML($content);
                 $dx = new DOMXPath($d);
                 foreach ($d->getElementsByTagName('a') as $url) {
                     $href = $url->getAttribute('href');
@@ -77,8 +81,8 @@ if ($uo->startUrl !== null) {
                         {
                             continue;
                         }
-                        $curl->addOption(CURLOPT_URL, $href);
-                        $curl->run();
+                        $curl = $this->runCurl($href);
+                        
                         self::$previousUrls[] = $href;
                         
                         $db = db::obj();
@@ -97,6 +101,7 @@ if ($uo->startUrl !== null) {
                             }
                             return $result;
                         });
+                        
                         $db->insert('test_data', array(
                           'url' => $info[CURLINFO_EFFECTIVE_URL][1],
                           'http_status_code' => $info[CURLINFO_HTTP_CODE][1],
@@ -106,19 +111,17 @@ if ($uo->startUrl !== null) {
                           'content_type' => $info[CURLINFO_CONTENT_TYPE][1],
                           ));
                     }
-                    if (self::getContent($curl) === FALSE)
+                    if (self::getContent($curl->getOutput()[0][1]) === FALSE)
                         break;
                 }
-
+                
                 return TRUE;
             }
         }
-
     }
-
+    
     $spc = new \SpiderHTTPUrl();
-
-    $spc->getContent($curl);
-
+    $curl = $spc->runCurl($uo->startUrl);
+    $spc->getContent($curl->getOutput()[0][1]);
     $curl->close();
 }
