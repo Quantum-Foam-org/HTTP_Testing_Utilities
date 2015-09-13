@@ -57,6 +57,8 @@ if ($uo->startUrl !== null) {
             
             $curl->run();
             
+            \common\logging\Logger::obj()->write('Spidered '.$url);
+            
             return $curl;
         }
         
@@ -67,20 +69,29 @@ if ($uo->startUrl !== null) {
                 return FALSE;
             } else {
                 self::$getContentLimit++;
-
+                
                 $d = new DomDocument();
                 @$d->loadHTML($content);
                 $dx = new DOMXPath($d);
                 foreach ($d->getElementsByTagName('a') as $url) {
                     $href = $url->getAttribute('href');
+                    
                     if (isset($href) && strlen($href)) {
                         if (!filter_var($href, FILTER_VALIDATE_URL)) {
                             $href = $uo->startUrl . $href;
+                        }
+                        else
+                        {
+                            if (parse_url($href,  PHP_URL_HOST) !== parse_url($uo->startUrl, PHP_URL_HOST))
+                            {
+                                continue;
+                            }
                         }
                         if (in_array($href, self::$previousUrls) || pathinfo($href, PATHINFO_EXTENSION) === 'iso')
                         {
                             continue;
                         }
+                    
                         $curl = $this->runCurl($href);
                         
                         self::$previousUrls[] = $href;
@@ -110,9 +121,12 @@ if ($uo->startUrl !== null) {
                           'response_length' => $info[CURLINFO_REQUEST_SIZE][1],
                           'content_type' => $info[CURLINFO_CONTENT_TYPE][1],
                           ));
+                        
+                        $output = $curl->getOutput()[0][1];
+                        $curl->close();
+                        if (self::getContent($output) === FALSE)
+                            break;
                     }
-                    if (self::getContent($curl->getOutput()[0][1]) === FALSE)
-                        break;
                 }
                 
                 return TRUE;
