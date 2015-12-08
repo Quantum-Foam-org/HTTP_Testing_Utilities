@@ -31,12 +31,6 @@ class UrlOpt extends cli\Flag {
 	);
 }
 
-//require_once('../php_common/object/Config.php');
-//require_once('../php_common/Config.php');
-//require_once('../php_common/logging/Logger.php');
-//require_once('./classes/Flag.php');
-//require_once('./classes/Readline.php');
-
 
 $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
 $fileHeader = fopen(__DIR__.'/http_headers.txt', 'w+');
