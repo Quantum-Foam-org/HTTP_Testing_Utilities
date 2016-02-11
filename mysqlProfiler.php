@@ -47,8 +47,6 @@ if (!$opt->sql2) {
 }
 
 if (!$opt->profile) {
-    $opt->profile = $argv[3];
-} else {
     echo "Set --profile limit to not use the default of ". PROFILE_LIMIT ."\n";
 }
 
@@ -74,7 +72,6 @@ class MysqlProfiler {
 
     private $sqlOpt;
     private $md5Sql1;
-    private $c;
     private $output;
 
     public function __construct(SqlOpt $opt) {
@@ -92,14 +89,14 @@ class MysqlProfiler {
     public function run() {
 
         $this->output = array(
-            $this->md5Sql1 => $this->profile_sql_get($this->sqlOpt->sql1),
-            $this->md5Sql2 => $this->profile_sql_get($this->sqlOpt->sql2)
+            $this->md5Sql1 => $this->profileSqlGet($this->sqlOpt->sql1),
+            $this->md5Sql2 => $this->profileSqlGet($this->sqlOpt->sql2)
         );
 
         return $this->output;
     }
 
-    private function profile_sql_get($sql) {
+    private function profileSqlGet($sql) {
         $output = [];
 
         $db = db::obj();
