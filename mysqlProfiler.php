@@ -37,6 +37,7 @@ class MysqlProfiler {
 
     private $sqlOpt;
     private $md5Sql1;
+    private $md5Sql2;
     private $output;
 
     public function __construct(SqlOpt $opt) {
@@ -105,7 +106,7 @@ class MysqlProfiler {
             $fileName = __DIR__.$this->sqlOpt->outFilePrefix.'_sql'.$index.'.csv';
             
             $f = new SplFileObject($fileName, 'w');
-            $f->fputcsv($this->output[$md5]+array('md5Sql'.$index));
+            $f->fputcsv(array_keys($this->output[$md5]));
             
             foreach ($this->output[$md5] as $row)
             {
