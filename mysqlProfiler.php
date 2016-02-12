@@ -33,41 +33,6 @@ class SqlOpt extends cli\Flag {
     );
 }
 
-$opt = new SqlOpt();
-
-$opt->exchangeArray(array_slice($argv, 1));
-
-if (!$opt->sql1) {
-    echo "Set --sql1 to continue\n";
-    exit(-1);
-}
-if (!$opt->sql2) {
-    echo "Set --sql2 to continue\n";
-    exit(-2);
-}
-
-if (!$opt->profile) {
-    echo "Set --profile limit to not use the default of ". PROFILE_LIMIT ."\n";
-}
-
-if ($opt->profile <= 0) {
-    $opt->profile = PROFILE_LIMIT;
-    echo "Using the default profile limit of " . PROFILE_LIMIT . "\n";
-}
-
-if ($opt->file === -1 || $opt->file === FALSE)
-{
-    echo "You can set a file by using --file that will store the contents of the query into a file\n";
-}
-
-
-$mp = new MySqlProfiler($opt);
-$mp->run();
-if (strlen($opt->file))
-{
-    $mp->write();
-}
-
 class MysqlProfiler {
 
     private $sqlOpt;
@@ -157,4 +122,40 @@ class MysqlProfiler {
             unset($f, $md5, $fileName);
         }
     }
+}
+
+
+$opt = new SqlOpt();
+
+$opt->exchangeArray(array_slice($argv, 1));
+
+if (!$opt->sql1) {
+    echo "Set --sql1 to continue\n";
+    exit(-1);
+}
+if (!$opt->sql2) {
+    echo "Set --sql2 to continue\n";
+    exit(-2);
+}
+
+if (!$opt->profile) {
+    echo "Set --profile limit to not use the default of ". PROFILE_LIMIT ."\n";
+}
+
+if ($opt->profile <= 0) {
+    $opt->profile = PROFILE_LIMIT;
+    echo "Using the default profile limit of " . PROFILE_LIMIT . "\n";
+}
+
+if ($opt->file === -1 || $opt->file === FALSE)
+{
+    echo "You can set a file by using --file that will store the contents of the query into a file\n";
+}
+
+
+$mp = new MySqlProfiler($opt);
+$mp->run();
+if (strlen($opt->file))
+{
+    $mp->write();
 }
