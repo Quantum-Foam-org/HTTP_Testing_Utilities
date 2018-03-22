@@ -38,6 +38,10 @@ if ($uo->startUrl !== null) {
         private static $getContentLimit = 0;
         private static $previousUrls = [];
         
+        public function __construct() {
+            self::$contentLimit = \common\Config::obj()->system['contentLength'];
+        }
+        
         public function runCurl($url)
         {
             
@@ -65,7 +69,7 @@ if ($uo->startUrl !== null) {
         public function getContent($content = null) {
             global $uo;
             
-            if (self::$getContentLimit >= 50000) {
+            if (self::$getContentLimit >= self::$contentLimit) {
                 return FALSE;
             } else {
                 self::$getContentLimit++;
