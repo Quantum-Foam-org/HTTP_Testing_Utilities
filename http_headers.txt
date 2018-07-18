@@ -1,0 +1,22 @@
+HTTP/1.1 301 Moved Permanently
+Date: Wed, 18 Jul 2018 17:53:52 GMT
+Transfer-Encoding: chunked
+Connection: keep-alive
+Cache-Control: max-age=3600
+Expires: Wed, 18 Jul 2018 18:53:52 GMT
+Location: https://www.acor.com/
+Server: cloudflare
+CF-RAY: 43c6cf7045fe5717-IAD
+
+HTTP/1.1 200 OK
+Date: Wed, 18 Jul 2018 17:53:53 GMT
+Content-Type: text/html
+Transfer-Encoding: chunked
+Connection: keep-alive
+Set-Cookie: __cfduid=dfac79ae15ea4d282eab50b4cec78d40e1531936432; expires=Thu, 18-Jul-19 17:53:52 GMT; path=/; domain=.acor.com; HttpOnly; Secure
+X-Powered-By: PHP/5.3.29
+Age: 2
+Expect-CT: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+Server: cloudflare
+CF-RAY: 43c6cf71996f9598-IAD
+
