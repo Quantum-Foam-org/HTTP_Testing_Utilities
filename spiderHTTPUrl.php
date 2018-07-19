@@ -45,9 +45,6 @@ try {
 
 if ($uo->startUrl !== null) {
     
-    define('DB_DSN', 'mysql:host=127.0.0.1;dbname=mysql_profile');
-    define('DB_USER_NAME', 'mysql_profile');
-    define('DB_USER_PASS', 'asjhAS78235rtjA%^23Sf');
 
     class SpiderHTTPUrl
     {
