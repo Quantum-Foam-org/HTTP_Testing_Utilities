@@ -7,15 +7,15 @@ $php_cli_dir = '../php_cli';
 $php_cli_autoload_file = $php_cli_dir . '/autoload.php';
 require ($php_cli_autoload_file);
 
-use common\curl\Main as curl;
-use cli\classes as cli;
-use common\db\Main as db;
+use \common\curl\Main as curl;
+use \cli\classes as cli;
+use \common\db\Main as db;
+use \common\url\Main as url;
 
 \common\Config::obj(__DIR__ . '/config/config.ini');
 
 class UrlOpt extends cli\Flag
 {
-
     protected $startUrl;
 
     protected $config = array(
@@ -23,6 +23,16 @@ class UrlOpt extends cli\Flag
             FILTER_VALIDATE_URL
         )
     );
+    
+    public function offsetSet($offset, $value) {
+        parent::offsetSet($offset, $value);
+        
+        try {
+            $this->$offset = new url($this->$offset);
+        } catch(\UnexpectedValueException $ue) {
+            exit(\common\logging\Logger::obj()->writeException($ue));
+        }
+    }
 }
 
 try {
@@ -59,7 +69,7 @@ if ($uo->startUrl !== null) {
             $this->whiteListExtension = \common\Config::obj()->system['whiteListExtension'];
         }
 
-        public function runCurl($url)
+        public function runCurl(url $url)
         {
             $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
             
@@ -98,26 +108,32 @@ if ($uo->startUrl !== null) {
                     $href = $url->getAttribute('href');
                     
                     if (isset($href) && strlen($href)) {
-                        if (! filter_var($href, FILTER_VALIDATE_URL)) {
-                            $href = $uo->startUrl . $href;
+                        try {
+                            $hrefUrl = new url($href);
+                        } catch (\UnexpectedValueException $ue) {
+                            \common\logging\Logger::obj()->writeDebug($ue->getMessage());
+                            $hrefUrl = FALSE;
+                        }
+                        if ($hrefUrl === FALSE) {
+                            $hrefUrl = new url($uo->startUrl .'/' . $href);
                         } else {
-                            if (parse_url($href, PHP_URL_HOST) !== parse_url($uo->startUrl, PHP_URL_HOST)) {
+                            if ($hrefUrl->host !== $uo->startUrl->host) {
                                 continue;
                             }
                         }
-                        if (in_array($href, $this->previousUrls)) {
+                        if (in_array((string)$hrefUrl, $this->previousUrls)) {
                             continue;
                         }
                         
-                        $this->previousUrls[] = $href;
+                        $this->previousUrls[] = (string)$hrefUrl;
                         
-                        $path = pathinfo($href, PATHINFO_EXTENSION);
+                        $path = pathinfo($hrefUrl, PATHINFO_EXTENSION);
                         if (strlen($path) > 0 && !($wle = array_search($path, $this->whiteListExtension))) {
                                 $this->unkownExtension[] = $path;
                                 continue;
                         }
                         
-                        $curl = $this->runCurl($href);
+                        $curl = $this->runCurl($hrefUrl);
                         
                         
                         try {
