@@ -69,7 +69,7 @@ if ($uo->startUrl !== null) {
             $this->whiteListExtension = \common\Config::obj()->system['whiteListExtension'];
         }
 
-        public function runCurl(url $url)
+        public function runCurl(url $url) : curl
         {
             $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
             
@@ -92,7 +92,7 @@ if ($uo->startUrl !== null) {
             return $curl;
         }
 
-        public function getContent($content = null)
+        public function getContent(string $content = null) : bool
         {
             global $uo;
             
@@ -115,7 +115,12 @@ if ($uo->startUrl !== null) {
                             $hrefUrl = FALSE;
                         }
                         if ($hrefUrl === FALSE) {
-                            $hrefUrl = new url($uo->startUrl .'/' . $href);
+                            try {
+                                $hrefUrl = new url($uo->startUrl .'/' . $href);
+                            } catch (\UnexpectedValueException $ue) {
+                                \common\logging\Logger::obj()->writeDebug($ue->getMessage());
+                                continue;
+                            }
                         } else {
                             if ($hrefUrl->host !== $uo->startUrl->host) {
                                 continue;
