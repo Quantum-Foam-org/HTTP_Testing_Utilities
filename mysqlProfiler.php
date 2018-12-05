@@ -1,9 +1,6 @@
 <?php
 
 define('PROFILE_LIMIT', 100);
-define('DB_DSN', 'mysql:host=localhost;dbname=test_profile');
-define('DB_USER_NAME', '');
-define('DB_USER_PASS', '');
 
 $common_php_dir = '../php_common';
 $common_autoload_file = $common_php_dir . '/autoload.php';
@@ -26,9 +23,9 @@ class SqlOpt extends cli\Flag {
     protected $file = -1;
     protected $profile;
     protected $config = array(
-        'sql1' => array(FILTER_SANATIZE_STRING),
-        'sql2' => array(FILTER_SANATIZE_STRING),
-        'file' => array(FILTER_SANATIZE_STRING),
+        'sql1' => array(FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES)),
+        'sql2' => array(FILTER_SANITIZE_STRING,  array('flags' => FILTER_FLAG_NO_ENCODE_QUOTES)),
+        'file' => array(FILTER_SANITIZE_STRING),
         'profile' => array(FILTER_VALIDATE_INT)
     );
 }
@@ -68,8 +65,12 @@ class MysqlProfiler {
         $db = db::obj();
 
         $db->getSth('SET profiling = 1');
-        for ($i = 1; $i <= QF_PROFILE_LIMIT; $i++) {
-            $db->query($sql);
+        for ($i = 1; $i <= PROFILE_LIMIT; $i++) {
+            try {
+                $db->query($sql);
+            } catch (\PDOException $pe) {
+                exit(\common\logging\Logger::obj()->writeException($pe));
+            }
             $result = $db->fetchAll('SHOW PROFILE');
 
             foreach ($result as $test) {
@@ -83,7 +84,7 @@ class MysqlProfiler {
         $db->getSth('SET profiling = 0');
         
         $output = array_map(function($v) {
-            return $v / QF_PROFILE_LIMIT;
+            return $v / PROFILE_LIMIT;
         }, $output);
         $output['total'] = array_sum($output);
         
@@ -103,17 +104,17 @@ class MysqlProfiler {
         try
         {
             $md5 = $this->{'md5Sql'.$index};
-            $fileName = __DIR__.$this->sqlOpt->outFilePrefix.'_sql'.$index.'.csv';
-            
-            $f = new SplFileObject($fileName, 'w');
-            $f->fputcsv(array_keys($this->output[$md5]));
-            
-            foreach ($this->output[$md5] as $row)
-            {
-                $f->fputcsv($row);
+            $fileName = __DIR__.'/'.$this->sqlOpt->file.'_sql'.$index.'.csv';
+            if (!\file_exists($fileName)) {
+                $f = new SplFileObject($fileName, 'w');
+                $f->fputcsv(array_keys($this->output[$md5]));
+                
+                $f->fputcsv($this->output[$md5]);
+                
+                echo "Wrote ".$fileName." for SQL ".$index."\n";
+            } else {
+                echo "Filename ".$fileName." already exists";
             }
-            
-            echo "Wrote ".$fileName." for SQL ".$index."\n";
         }
         catch (RuntimeException $e)
         {
