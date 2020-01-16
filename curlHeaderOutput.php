@@ -41,6 +41,11 @@ $return = 1;
 
 if ($argc > 1) {
 	$uo = new \UrlOpt();
+        try {
+            $uo->exchangeArray(array_slice($argv, 1));
+        } catch(\UnexpectedValueException $e) {
+            exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
+        }
 	$uo->exchangeArray(array_slice($argv, 1));
 	if ($uo->url !== FALSE) {
 		

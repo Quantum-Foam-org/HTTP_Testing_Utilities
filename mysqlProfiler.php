@@ -65,28 +65,23 @@ class MysqlProfiler {
         $db = db::obj();
 
         $db->getSth('SET profiling = 1');
-        for ($i = 1; $i <= PROFILE_LIMIT; $i++) {
+        for ($i = 1; $i <= $this->sqlOpt->profile; $i++) {
             try {
                 $db->query($sql);
             } catch (\PDOException $pe) {
-                exit(\common\logging\Logger::obj()->writeException($pe));
+                exit(\common\logging\Logger::obj()->writeException($pe, -1, TRUE));
             }
             $result = $db->fetchAll('SHOW PROFILE');
 
             foreach ($result as $test) {
                 $key = strtolower(str_replace(' ', '_', $test['Status']));
-                if (!isset($output[$key])) {
-                    $output[$key] = 0;
+                if (!isset($output[$i][$key])) {
+                    $output[$i][$key] = 0;
                 }
-                $output[$key] += $test['Duration'];
+                $output[$i][$key] += $test['Duration'];
             }
         }
         $db->getSth('SET profiling = 0');
-        
-        $output = array_map(function($v) {
-            return $v / PROFILE_LIMIT;
-        }, $output);
-        $output['total'] = array_sum($output);
         
         return $output;
     }
@@ -107,9 +102,11 @@ class MysqlProfiler {
             $fileName = __DIR__.'/'.$this->sqlOpt->file.'_sql'.$index.'.csv';
             if (!\file_exists($fileName)) {
                 $f = new SplFileObject($fileName, 'w');
-                $f->fputcsv(array_keys($this->output[$md5]));
+                $f->fputcsv(array_keys($this->output[$md5][1]));
                 
-                $f->fputcsv($this->output[$md5]);
+                foreach ($this->output[$md5] as $csvRow) {
+                    $f->fputcsv($csvRow);
+                }
                 
                 echo "Wrote ".$fileName." for SQL ".$index."\n";
             } else {
@@ -157,7 +154,7 @@ if ($opt->file === -1 || $opt->file === FALSE)
 
 $mp = new MySqlProfiler($opt);
 $mp->run();
-if (strlen($opt->file))
+if (is_string($opt->file))
 {
     $mp->write();
 }

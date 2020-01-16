@@ -30,7 +30,7 @@ class UrlOpt extends cli\Flag
         try {
             $this->$offset = new url($this->$offset);
         } catch(\UnexpectedValueException $ue) {
-            exit(\common\logging\Logger::obj()->writeException($ue));
+            exit(\common\logging\Logger::obj()->writeException($ue, -1, TRUE));
         }
     }
 }
@@ -39,8 +39,7 @@ try {
     $uo = new \UrlOpt();
     $uo->exchangeArray(array_slice($_SERVER['argv'], 1));
 } catch (\UnexpectedValueException | \ArgumentCountError $e) {
-    \common\logging\Logger::obj()->writeException($e);
-    echo $e->getMessage()."\n";
+    exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
 }
 
 if ($uo->startUrl !== null) {
@@ -141,7 +140,7 @@ if ($uo->startUrl !== null) {
                         try {
                             $db = db::obj();
                         } catch (\PDOException $pe) {
-                            exit(\common\logging\Logger::obj()->writeException($pe));
+                            exit(\common\logging\Logger::obj()->writeException($pe, -1, TRUE));
                         }
                         $info = array_filter($curl->info()[0], function ($v) {
                             if (in_array($v[0], array(
@@ -159,7 +158,7 @@ if ($uo->startUrl !== null) {
                             return $result;
                         });
                         try {
-                            $db->insert('test_data', array(
+                            $db->insert('spidered_site', array(
                                 'url' => $info[CURLINFO_EFFECTIVE_URL][1],
                                 'http_status_code' => $info[CURLINFO_HTTP_CODE][1],
                                 'response_time' => $info[CURLINFO_TOTAL_TIME][1],
@@ -168,7 +167,7 @@ if ($uo->startUrl !== null) {
                                 'content_type' => $info[CURLINFO_CONTENT_TYPE][1]
                             ));
                         } catch (\RuntimeException | \Error $e) {
-                            exit(\common\logging\Logger::obj()->writeException($e));
+                            exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
                         }
                         $output = $curl->getOutput()[0][1];
                         $curl->close();
@@ -197,4 +196,6 @@ if ($uo->startUrl !== null) {
     $spc->getContent($curl->getOutput()[0][1]);
     $curl->close();
     $spc->getunkownExtension();
+} else {
+    echo "Please supply a valid URL via the --startUrl option";
 }
