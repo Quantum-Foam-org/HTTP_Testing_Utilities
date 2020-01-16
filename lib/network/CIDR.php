@@ -64,11 +64,11 @@ class CIDR {
     }
     
     private function setFirstHost() : void {
-        $this->firstHostIp = $this->getIpProperty(str_pad(decbin(bindec($this->networkIp['binString'])+1), self::MAX_CIDR, 0, STR_PAD_LEFT));
+        $this->firstHostIp = $this->getIpProperty(str_pad(decbin(bindec($this->networkIp['binString']) + 1), self::MAX_CIDR, 0, STR_PAD_LEFT));
     }
     
     private function setLastHost() : void {
-        $this->lastHostIp = $this->getIpProperty(str_pad(decbin(bindec($this->networkIp['binString'])+$this->numHosts), self::MAX_CIDR, 0, STR_PAD_LEFT));
+        $this->lastHostIp = $this->getIpProperty(str_pad(decbin(bindec($this->networkIp['binString']) + $this->numHosts-1), self::MAX_CIDR, 0, STR_PAD_LEFT));
     } 
     
     private function setSubnetMaskCIDR() : void {
