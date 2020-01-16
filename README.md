@@ -6,8 +6,11 @@ This project requires https://github.com/malaimo2900/php_cli and https://github.
 It includes curlHeaderOutput.php, mysqlProfiler.php, spiderHTTPUrl.php and ipNetwork.php.
 
 1.) curl Header Output will return the number of HTTP Location headers, the time the request took, print out the cookies and also log all HTTP headers to a file.
+
 2.) mysql profiler utilizes the mysql profile and writes a csv of the profiled information.
+
 3.) spider http url will sider a white listed set of a tag href attributes. The white list is located in config/config.ini
+
 4.) ip network will process a ipv4 network and cidr and return the network information
 
 Run these commands:
