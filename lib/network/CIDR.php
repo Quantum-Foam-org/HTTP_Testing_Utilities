@@ -60,21 +60,20 @@ class CIDR {
     }
     
     private function setNumberOfHosts() : void {
-        $this->numHosts = pow(2, (self::MAX_CIDR - $this->networkCIDR->cidr));
+        $this->numHosts = pow(2, (self::MAX_CIDR - $this->cidr));
     }
     
     private function setFirstHost() : void {
-        $this->firstHostIp = $this->getIpProperty(decbin((bindec($this->networkIp['binString']) + 1)));
+        $this->firstHostIp = $this->getIpProperty(str_pad(decbin(bindec($this->networkIp['binString'])+1), self::MAX_CIDR, 0, STR_PAD_LEFT));
     }
     
     private function setLastHost() : void {
-        $this->lastHostIp = $this->getIpProperty(decbin((bindec($this->networkIp['binString']) + $this->numHosts)));
+        $this->lastHostIp = $this->getIpProperty(str_pad(decbin(bindec($this->networkIp['binString'])+$this->numHosts), self::MAX_CIDR, 0, STR_PAD_LEFT));
     } 
     
     private function setSubnetMaskCIDR() : void {
         $this->cidr = $this->networkCIDR->cidr;
-        $bin = str_pad(str_repeat(1, $this->cidr), self::MAX_CIDR, 0, STR_PAD_RIGHT);
-        $this->subnetMaskIp = $this->getIpProperty($bin);
+        $this->subnetMaskIp = $this->getIpProperty(str_pad(str_repeat(1, $this->cidr), self::MAX_CIDR, 0, STR_PAD_RIGHT));
     }
     
     private function getIpProperty(string $binString) : array {
