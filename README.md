@@ -16,7 +16,7 @@ Run these commands:
 
 2.) cd http_testing_utilities
 
-5.) git clone https://github.com/malaimo2900/MemcacheStats.git
+5.) git clone https://github.com/malaimo2900/HTTP_Testing_Utilities.git
 
 6.) git clone https://github.com/malaimo2900/php_cli.git
 
@@ -30,4 +30,4 @@ Run these commands:
 * php mysqlProfiler.php --sql1="SELECT * FROM spidered_site" --sql2="SELECT * FROM spidered_site" --profile=2 --file=outputFile
 * php ipNetwork.php --cidr=16 --ip=10.10.10.0
 
-Right now use tag v1.2 for borht php_commong and php_cli
+Right now use tag v1.2 for both php_commong and php_cli and v1.0 for http_testing_utilities
