@@ -66,7 +66,7 @@ class CIDR {
     }
     
     private function setFirstHost() : void {
-        $bin = decbin(bindec($this->networkIp['binString']) + 1);
+        $bin = decbin(bindec($this->networkIp['binString']));
         $pad = str_pad($bin, self::MAX_CIDR, 0, STR_PAD_LEFT);
         $this->firstHostIp = $this->getIpProperty($pad);
     }
