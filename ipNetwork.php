@@ -26,7 +26,7 @@ if ($opt->cidr !== null && $opt->ip !== null) {
     $network = new CIDR($opt->ip, $opt->cidr);
     
     printf("CIDR: %s\n", $network->cidr);
-    printf("IP: %s\n", $network->ip['octetString']);
+    printf("HOST IP: %s\n", $network->ip['octetString']);
     printf("Network: %s\n", $network->networkIp['octetString']);
     printf("Subnet Mask: %s\n", $network->subnetMaskIp['octetString']);
     printf("Number of Hosts: %s\n", $network->numHosts);
