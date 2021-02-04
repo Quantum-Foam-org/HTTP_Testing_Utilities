@@ -20,11 +20,7 @@ use \lib\network\CIDR as CIDR;
 \common\Config::obj(__DIR__.'/config/config.ini');
 
 $opt = new NetworkCLIOpt();
-try {
-    $opt->exchangeArray(array_slice($argv, 1));
-} catch(\UnexpectedValueException $e) {
-    exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
-}
+$opt->exchangeArray(array_slice($argv, 1));
 
 if ($opt->cidr !== null && $opt->ip !== null) {
     $network = new CIDR($opt->ip, $opt->cidr);
