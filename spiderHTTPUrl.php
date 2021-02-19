@@ -9,7 +9,8 @@ require ($php_cli_autoload_file);
 
 use \common\curl\Main as curl;
 use \cli\classes as cli;
-use \common\db\Main as db;
+use \common\db\PDO\Main as MySQL;
+use \common\db\Mongo\Main as Mongo;
 use \common\url\Main as url;
 
 \common\Config::obj(__DIR__ . '/config/config.ini');
@@ -137,11 +138,8 @@ if ($uo->startUrl !== null) {
                         $curl = $this->runCurl($hrefUrl);
                         
                         
-                        try {
-                            $db = db::obj();
-                        } catch (\PDOException $pe) {
-                            exit(\common\logging\Logger::obj()->writeException($pe, -1, TRUE));
-                        }
+                        
+                        
                         $info = array_filter($curl->info()[0], function ($v) {
                             if (in_array($v[0], array(
                                 CURLINFO_EFFECTIVE_URL,
@@ -157,18 +155,48 @@ if ($uo->startUrl !== null) {
                             }
                             return $result;
                         });
-                        try {
-                            $db->insert('spidered_site', array(
-                                'url' => $info[CURLINFO_EFFECTIVE_URL][1],
-                                'http_status_code' => $info[CURLINFO_HTTP_CODE][1],
-                                'response_time' => $info[CURLINFO_TOTAL_TIME][1],
-                                'redirect_count' => $info[CURLINFO_REDIRECT_COUNT][1],
-                                'response_length' => $info[CURLINFO_REQUEST_SIZE][1],
-                                'content_type' => $info[CURLINFO_CONTENT_TYPE][1]
-                            ));
-                        } catch (\RuntimeException | \Error $e) {
-                            exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
+                        if ($uo->db === 'mysql') {
+                            try {
+                                $db = MySQL::obj();
+                            } catch (\PDOException $pe) {
+                                exit(\common\logging\Logger::obj()->writeException($pe, -1, TRUE));
+                            }
+                            
+                            try {
+                                $db->insert('spidered_site', array(
+                                    'url' => $info[CURLINFO_EFFECTIVE_URL][1],
+                                    'http_status_code' => $info[CURLINFO_HTTP_CODE][1],
+                                    'response_time' => $info[CURLINFO_TOTAL_TIME][1],
+                                    'redirect_count' => $info[CURLINFO_REDIRECT_COUNT][1],
+                                    'response_length' => $info[CURLINFO_REQUEST_SIZE][1],
+                                    'content_type' => $info[CURLINFO_CONTENT_TYPE][1]
+                                ));
+                            } catch (\RuntimeException | \Error $e) {
+                                exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
+                            }
+                        } else if ($uo->db === 'mongo') {
+                            try {
+                                $db = Mongo::obj();
+                            } catch (\MongoDB\Driver\Exception\InvalidArgumentException  | \MongoDB\Driver\Exception\RuntimeException $pe) {
+                                exit(\common\logging\Logger::obj()->writeException($pe, -1, TRUE));
+                            }
+                            
+                            try {
+                                $document = new MongoDocument();
+                                $document->exchangeArray(array(
+                                    'url' => $info[CURLINFO_EFFECTIVE_URL][1],
+                                    'http_status_code' => $info[CURLINFO_HTTP_CODE][1],
+                                    'response_time' => $info[CURLINFO_TOTAL_TIME][1],
+                                    'redirect_count' => $info[CURLINFO_REDIRECT_COUNT][1],
+                                    'response_length' => $info[CURLINFO_REQUEST_SIZE][1],
+                                    'content_type' => $info[CURLINFO_CONTENT_TYPE][1]
+                                ));
+                                $db->insert('db.spidered_site', $document);
+                            } catch (\RuntimeException | \Error $e) {
+                                exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
+                            }
                         }
+                        
                         $output = $curl->getOutput()[0][1];
                         $curl->close();
                         if ($this->getContent($output) === FALSE)
