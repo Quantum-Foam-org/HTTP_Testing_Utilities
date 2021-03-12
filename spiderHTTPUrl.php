@@ -9,8 +9,9 @@ require ($php_cli_autoload_file);
 
 use \common\curl\Main as curl;
 use \cli\classes as cli;
-use \common\db\PDO\Main as MySQL;
-use \common\db\Mongo\Main as Mongo;
+use \common\db\PDO\Main as PDO;
+use \common\db\MySQL as MySQL;
+use \common\db\Mongo as Mongo;
 use \common\url\Main as url;
 
 \common\Config::obj(__DIR__ . '/config/config.ini');
@@ -157,44 +158,46 @@ if ($uo->startUrl !== null) {
                         });
                         if ($uo->db === 'mysql') {
                             try {
-                                $db = MySQL::obj();
+                                $db = PDO\Main::obj();
                             } catch (\PDOException $pe) {
                                 exit(\common\logging\Logger::obj()->writeException($pe, -1, TRUE));
                             }
                             
-                            try {
-                                $db->insert('spidered_site', array(
-                                    'url' => $info[CURLINFO_EFFECTIVE_URL][1],
-                                    'http_status_code' => $info[CURLINFO_HTTP_CODE][1],
-                                    'response_time' => $info[CURLINFO_TOTAL_TIME][1],
-                                    'redirect_count' => $info[CURLINFO_REDIRECT_COUNT][1],
-                                    'response_length' => $info[CURLINFO_REQUEST_SIZE][1],
-                                    'content_type' => $info[CURLINFO_CONTENT_TYPE][1]
-                                ));
-                            } catch (\RuntimeException | \Error $e) {
-                                exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
-                            }
+                            $dbModel = new MySQL\SQLDBModel();
                         } else if ($uo->db === 'mongo') {
                             try {
                                 $db = Mongo::obj();
                             } catch (\MongoDB\Driver\Exception\InvalidArgumentException  | \MongoDB\Driver\Exception\RuntimeException $pe) {
                                 exit(\common\logging\Logger::obj()->writeException($pe, -1, TRUE));
                             }
-                            
-                            try {
-                                $document = new MongoDocument();
-                                $document->exchangeArray(array(
-                                    'url' => $info[CURLINFO_EFFECTIVE_URL][1],
-                                    'http_status_code' => $info[CURLINFO_HTTP_CODE][1],
-                                    'response_time' => $info[CURLINFO_TOTAL_TIME][1],
-                                    'redirect_count' => $info[CURLINFO_REDIRECT_COUNT][1],
-                                    'response_length' => $info[CURLINFO_REQUEST_SIZE][1],
-                                    'content_type' => $info[CURLINFO_CONTENT_TYPE][1]
-                                ));
-                                $db->insert('db.spidered_site', $document);
-                            } catch (\RuntimeException | \Error $e) {
-                                exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
-                            }
+                            $dbModel = new Mongo\MongoModel();
+                        }
+                        
+                        try {
+                            $dbModel->url = $info[CURLINFO_EFFECTIVE_URL][1];
+                            $dbModel->http_status_code = $info[CURLINFO_HTTP_CODE][1];
+                            $dbModel->response_time = $info[CURLINFO_TOTAL_TIME][1];
+                            $dbModel->redirect_coutn = $info[CURLINFO_REDIRECT_COUNT][1];
+                            $dbModel->response_length = $info[CURLINFO_REQUEST_SIZE][1];
+                            $dbModel->content_type = $info[CURLINFO_CONTENT_TYPE][1];
+                        } catch (\UnexpectedValueException $e) {
+                            exit(\common\logging\Logger::obj()->writeException($e));
+                        }
+
+                        $result = $dbModel->insert();
+
+                        if ($uo->db === 'mysql' && !is_int($result)) {
+                            exit(\common\logging\Logger::obj()->write(
+                                    'Could not insert spider information into MySQL database', -1));
+                        } else if ($uo->db === 'mongo' && 
+                                $result instanceOf WriteResult &&
+                                (
+                                        $result->getInsertedCount() !== 1 || 
+                                        count($result->getWriteErrors()) > 0
+                                )
+                        ){
+                            exit(\common\logging\Logger::obj()->write(
+                                    'Could not insert spider information into Mongo database', -1));
                         }
                         
                         $output = $curl->getOutput()[0][1];
