@@ -7,11 +7,13 @@ $php_cli_dir = '../php_cli';
 $php_cli_autoload_file = $php_cli_dir . '/autoload.php';
 require ($php_cli_autoload_file);
 
+require ('./lib/autoload.php');
+
 use \common\curl\Main as curl;
 use \cli\classes as cli;
 use \common\db\PDO\Main as PDO;
-use \common\db\MySQL as MySQL;
-use \common\db\Mongo as Mongo;
+use \lib\db\MySQL as local_MySQL;
+#use \common\db\Mongo as Mongo;
 use \common\url\Main as url;
 
 \common\Config::obj(__DIR__ . '/config/config.ini');
@@ -19,20 +21,31 @@ use \common\url\Main as url;
 class UrlOpt extends cli\Flag
 {
     protected $startUrl;
+    
+    protected $db;
 
-    protected $config = array(
-        'startUrl' => array(
+    protected $config =[
+        'startUrl' => 
+        [
             FILTER_VALIDATE_URL
-        )
-    );
+        ],
+        'db'=> 
+        [
+            FILTER_VALIDATE_REGEXP, 
+            [
+                'options' => ['regexp' => '/^mysql$/']
+            ]
+        ]
+    ];
     
     public function offsetSet($offset, $value) {
         parent::offsetSet($offset, $value);
-        
-        try {
-            $this->$offset = new url($this->$offset);
-        } catch(\UnexpectedValueException $ue) {
-            exit(\common\logging\Logger::obj()->writeException($ue, -1, TRUE));
+        if ($offset === 'startUrl') {
+            try {
+                $this->$offset = new url($this->$offset);
+            } catch(\UnexpectedValueException $ue) {
+                exit(\common\logging\Logger::obj()->writeException($ue, -1, TRUE));
+            }
         }
     }
 }
@@ -158,12 +171,12 @@ if ($uo->startUrl !== null) {
                         });
                         if ($uo->db === 'mysql') {
                             try {
-                                $db = PDO\Main::obj();
+                                $db = PDO::obj();
                             } catch (\PDOException $pe) {
                                 exit(\common\logging\Logger::obj()->writeException($pe, -1, TRUE));
                             }
                             
-                            $dbModel = new MySQL\SQLDBModel();
+                            $dbModel = new local_MySQL\SpiderModel();
                         } else if ($uo->db === 'mongo') {
                             try {
                                 $db = Mongo::obj();
@@ -177,7 +190,7 @@ if ($uo->startUrl !== null) {
                             $dbModel->url = $info[CURLINFO_EFFECTIVE_URL][1];
                             $dbModel->http_status_code = $info[CURLINFO_HTTP_CODE][1];
                             $dbModel->response_time = $info[CURLINFO_TOTAL_TIME][1];
-                            $dbModel->redirect_coutn = $info[CURLINFO_REDIRECT_COUNT][1];
+                            $dbModel->redirect_count = $info[CURLINFO_REDIRECT_COUNT][1];
                             $dbModel->response_length = $info[CURLINFO_REQUEST_SIZE][1];
                             $dbModel->content_type = $info[CURLINFO_CONTENT_TYPE][1];
                         } catch (\UnexpectedValueException $e) {
@@ -195,7 +208,7 @@ if ($uo->startUrl !== null) {
                                         $result->getInsertedCount() !== 1 || 
                                         count($result->getWriteErrors()) > 0
                                 )
-                        ){
+                        ) {
                             exit(\common\logging\Logger::obj()->write(
                                     'Could not insert spider information into Mongo database', -1));
                         }
