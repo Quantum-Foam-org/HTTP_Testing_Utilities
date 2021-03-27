@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\validate;
+namespace HTTPTestingUtilities\lib\network\validate;
 
 use \common\obj as obj;
 

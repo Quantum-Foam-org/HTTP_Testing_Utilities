@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\network;
+namespace HTTPTestingUtilities\lib\network;
 
 use lib\validate\NetworkCIDR as NetworkCIDR;
 

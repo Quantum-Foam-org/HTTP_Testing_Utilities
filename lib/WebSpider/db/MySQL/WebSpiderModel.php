@@ -1,10 +1,10 @@
 <?php
 
-namespace lib\db\MySQL;
+namespace HTTPTestingUtilities\lib\db\MySQL;
 
 use common\db\MySQL;
 
-class SpiderModel extends MySQL\MySQLModel {
+class WebSpiderModel extends MySQL\MySQLModel {
 
     protected $id;
     protected $url;

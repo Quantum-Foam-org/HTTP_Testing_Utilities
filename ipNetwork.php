@@ -1,6 +1,6 @@
 <?php
 
-
+namespace HTTPTestingUtilities;
 
 $common_php_dir = '../php_common';
 $common_autoload_file = $common_php_dir.'/autoload.php';
@@ -14,8 +14,8 @@ require($php_cli_autoload_file);
 
 require ('./lib/autoload.php');
 
-use \lib\validate\NetworkCLIOpt as NetworkCLIOpt;
-use \lib\network\CIDR as CIDR;
+use HTTPTestingUtilities\lib\network\validate\NetworkCLIOpt;
+use HTTPTestingUtilities\lib\network\CIDR;
 
 \common\Config::obj(__DIR__.'/config/config.ini');
 
