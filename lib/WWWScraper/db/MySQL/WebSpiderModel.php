@@ -1,6 +1,6 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\db\MySQL;
+namespace HTTPTestingUtilities\lib\WWWScraper\db\MySQL;
 
 use common\db\MySQL;
 

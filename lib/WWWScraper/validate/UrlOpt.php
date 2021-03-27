@@ -1,6 +1,6 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\WebSpider;
+namespace HTTPTestingUtilities\lib\WWWScraper;
 
 use cli\classes as cli;
 use common\url\Main as url;

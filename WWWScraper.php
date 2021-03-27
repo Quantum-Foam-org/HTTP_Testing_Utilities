@@ -13,7 +13,7 @@ require ($php_cli_autoload_file);
 require ('./lib/autoload.php');
 
 use common\Config;
-use HTTPTestingUtilities\lib\WebSpider;
+use HTTPTestingUtilities\lib\WWWScraper;
 
 Config::obj(__DIR__ . '/config/config.ini');
 
@@ -25,7 +25,7 @@ try {
 }
 
 if ($uo->startUrl !== null) {
-    $wsm = new WebSpider\Main();
+    $wsm = new WWWScraper\Main();
     $curl = $wsm->runCurl($uo->startUrl);
     $wsm->getContent($curl->getOutput()[0][1]);
     $curl->close();

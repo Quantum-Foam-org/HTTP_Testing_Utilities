@@ -1,13 +1,13 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\WebSpider;
+namespace HTTPTestingUtilities\lib\WWWScraper;
 
 use common\Config;
 use common\curl;
 use common\db\PDO\Main as PDO;
 #use \common\db\Mongo as Mongo;
 use common\logging\Logger;
-use HTTPTestingUtilities\lib\WebSpider\db\MySQL as local_MySQL;
+use HTTPTestingUtilities\lib\WWWScraper\db\MySQL as local_MySQL;
 
 class Main {
     private $getContentLimit = 0;
