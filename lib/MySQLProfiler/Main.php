@@ -3,16 +3,16 @@
 namespace HTTPTestingUtilities\lib\MySQLProfiler;
 
 
-use common\db\Main as db;
+use common\db\PDO;
 
-class MysqlProfiler {
+class Main {
 
     private $sqlOpt;
     private $md5Sql1;
     private $md5Sql2;
     private $output;
 
-    public function __construct(SqlOpt $opt) {
+    public function __construct(validate\SQLOpt $opt) {
         $this->sqlOpt = $opt;
         
         $this->md5Sql1 = md5($this->sqlOpt->sql1);
@@ -37,7 +37,7 @@ class MysqlProfiler {
     private function profileSqlGet($sql) {
         $output = [];
 
-        $db = db::obj();
+        $db = PDO\Main::obj();
 
         $db->getSth('SET profiling = 1');
         for ($i = 1; $i <= $this->sqlOpt->profile; $i++) {

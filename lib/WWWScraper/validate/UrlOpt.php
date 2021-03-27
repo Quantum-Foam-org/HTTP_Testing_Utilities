@@ -1,6 +1,6 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\WWWScraper;
+namespace HTTPTestingUtilities\lib\WWWScraper\validate;
 
 use cli\classes as cli;
 use common\url\Main as url;

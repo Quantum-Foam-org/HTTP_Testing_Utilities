@@ -2,7 +2,7 @@
 
 namespace HTTPTestingUtilities\lib\network;
 
-use lib\validate\NetworkCIDR as NetworkCIDR;
+use HTTPTestingUtilities\lib\network\validate\NetworkCIDR;
 
 class CIDR {
     

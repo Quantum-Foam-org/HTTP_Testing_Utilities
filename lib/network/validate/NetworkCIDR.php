@@ -2,7 +2,7 @@
 
 namespace HTTPTestingUtilities\lib\network\validate;
 
-use \common\obj as obj;
+use common\obj as obj;
 
 class NetworkCIDR extends obj\Config {
 

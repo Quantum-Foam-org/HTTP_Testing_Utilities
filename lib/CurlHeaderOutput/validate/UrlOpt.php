@@ -1,6 +1,6 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\WebSpider;
+namespace HTTPTestingUtilities\lib\CurlHeaderOutput\validate;
 
 use cli\classes as cli;
 

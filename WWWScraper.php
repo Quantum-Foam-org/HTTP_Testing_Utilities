@@ -18,7 +18,7 @@ use HTTPTestingUtilities\lib\WWWScraper;
 Config::obj(__DIR__ . '/config/config.ini');
 
 try {
-    $uo = new WebSpider\validate\UrlOpt();
+    $uo = new WWWScraper\validate\UrlOpt();
     $uo->exchangeArray(array_slice($_SERVER['argv'], 1));
 } catch (\UnexpectedValueException | \ArgumentCountError $e) {
     exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));

@@ -3,7 +3,7 @@ namespace HTTPTestingUtilities\lib\MySQLProfiler\validate;
 
 use cli\classes as cli;
  
-class SqlOpt extends cli\Flag {
+class SQLOpt extends cli\Flag {
 
     protected $sql1;
     protected $sql2;

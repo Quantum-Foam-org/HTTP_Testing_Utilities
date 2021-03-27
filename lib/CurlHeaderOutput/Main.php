@@ -2,6 +2,8 @@
 
 namespace HTTPTestingUtilities\lib\CurlHeaderOutput;
 
+use common\curl;
+
 class Main {
 
     public static function run(string $url) : array {
@@ -11,7 +13,7 @@ class Main {
         $cookieFile = __DIR__ . '/http_cookies.txt';
         touch($cookieFile);
 
-        $curl = new curl(FALSE);
+        $curl = new curl\Main(FALSE);
 
         $curl->create();
 

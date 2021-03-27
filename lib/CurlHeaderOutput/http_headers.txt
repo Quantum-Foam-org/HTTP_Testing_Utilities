@@ -1,0 +1,42 @@
+HTTP/1.1 301 Moved Permanently
+Date: Sat, 27 Mar 2021 19:49:48 GMT
+Server: Kestrel
+Content-Length: 0
+Location: https://www.microsoft.com/
+
+HTTP/2 302 
+content-length: 0
+location: https://www.microsoft.com/en-us/
+date: Sat, 27 Mar 2021 19:49:49 GMT
+tls_version: tls1.3
+strict-transport-security: max-age=31536000
+x-rtag: ARRPrd
+
+HTTP/2 200 
+cache-control: no-cache, no-store, no-transform
+pragma: no-cache
+content-type: text/html; charset=utf-8
+expires: -1
+x-activity-id: 07ffa536-81c8-4703-b253-93c30891556a
+ms-cv: Qkt73Tkz3EijnMls.0
+x-appversion: 1.0.7718.11991
+x-az: {did:92e7dc58ca2143cfb2c818b047cc5cd1, rid: OneDeployContainer, sn: marketingsites-prod-odwestcentralus, dt: 2018-05-03T20:14:23.4188992Z, bt: 2021-02-17T15:39:42.0000000Z}
+ms-operation-id: bd963d99af46d94d9b359b881f5235b0
+p3p: CP="CAO CONi OTR OUR DEM ONL"
+x-ua-compatible: IE=Edge;chrome=1
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+access-control-allow-methods: HEAD,GET,POST,PATCH,PUT,OPTIONS
+x-xss-protection: 1; mode=block
+content-length: 230134
+date: Sat, 27 Mar 2021 19:49:50 GMT
+set-cookie: isFirstSession=1; path=/;SameSite=None; secure; HttpOnly
+set-cookie: MUID=2DBA1455561E625525CB045257366360; domain=.microsoft.com; expires=Wed, 27-Apr-2022 19:49:49 GMT; path=/;SameSite=None; secure
+set-cookie: X-FD-FEATURES=ids=sfwaaa%2catperf680t2%2c4722t1%2c6049t1%2c9928t1%2c9002t1%2c10396c%2ctasmigration010%2ccartemberpl%2c10606t1%2cdisablenorefunds%2cdaconvertenabled%2cenablescarlettmetadata%2c10603t1&imp=07ffa536-81c8-4703-b253-93c30891556a; expires=Sun, 27-Mar-2022 19:49:49 GMT; path=/; secure; HttpOnly
+set-cookie: X-FD-Time=1; expires=Sat, 27-Mar-2021 19:54:49 GMT; path=/;SameSite=None; secure; HttpOnly
+tls_version: tls1.3
+strict-transport-security: max-age=31536000
+set-cookie: akacd_OneRF=1624650590~rv=3~id=2e03fc10c6d65bfb4855a67398b77ef9; path=/; Expires=Fri, 25 Jun 2021 19:49:50 GMT; Secure; SameSite=None
+set-cookie: akacd_OneRF=1624650590~rv=3~id=2e03fc10c6d65bfb4855a67398b77ef9; path=/; Expires=Fri, 25 Jun 2021 19:49:50 GMT; Secure; SameSite=None
+x-rtag: RT
+

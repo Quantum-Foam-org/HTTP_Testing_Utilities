@@ -12,11 +12,13 @@ $php_cli_dir = '../php_cli';
 $php_cli_autoload_file = $php_cli_dir . '/autoload.php';
 require($php_cli_autoload_file);
 
+require ('./lib/autoload.php');
+
 use HTTPTestingUtilities\lib\MySQLProfiler;
 
 \common\Config::obj(__DIR__ . '/config/config.ini');
 
-$opt = new MySQLProfiler\validate\SqlOpt();
+$opt = new MySQLProfiler\validate\SQLOpt();
 
 $opt->exchangeArray(array_slice($argv, 1));
 

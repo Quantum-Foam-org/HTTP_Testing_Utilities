@@ -4,6 +4,7 @@ namespace HTTPTestingUtilities\lib\WWWScraper;
 
 use common\Config;
 use common\curl;
+use common\url\Main as url;
 use common\db\PDO\Main as PDO;
 #use \common\db\Mongo as Mongo;
 use common\logging\Logger;
@@ -52,9 +53,9 @@ class Main {
         } else {
             $this->getContentLimit++;
 
-            $d = new DomDocument();
+            $d = new \DomDocument();
             @$d->loadHTML($content);
-            $dx = new DOMXPath($d);
+            $dx = new \DOMXPath($d);
             foreach ($d->getElementsByTagName('a') as $url) {
                 $href = $url->getAttribute('href');
 
