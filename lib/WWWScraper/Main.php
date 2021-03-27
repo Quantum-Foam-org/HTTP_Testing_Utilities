@@ -113,7 +113,7 @@ class Main {
                             exit(Logger::obj()->writeException($pe, -1, TRUE));
                         }
 
-                        $dbModel = new local_MySQL\WebSpiderModel();
+                        $dbModel = new local_MySQL\ScraperModel();
                     } else if ($uo->db === 'mongo') {
                         try {
                             $db = Mongo::obj();
@@ -121,7 +121,7 @@ class Main {
                             exit(Logger::obj()->writeException($pe, -1, TRUE));
                         }
 
-                        $dbModel = new Mongo\WebSpiderModel();
+                        $dbModel = new Mongo\ScraperModel();
                     }
 
                     try {

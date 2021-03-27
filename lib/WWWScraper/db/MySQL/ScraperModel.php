@@ -4,7 +4,7 @@ namespace HTTPTestingUtilities\lib\WWWScraper\db\MySQL;
 
 use common\db\MySQL;
 
-class WebSpiderModel extends MySQL\MySQLModel {
+class ScraperModel extends MySQL\MySQLModel {
 
     protected $id;
     protected $url;
