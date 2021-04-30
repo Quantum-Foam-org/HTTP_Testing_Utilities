@@ -61,7 +61,7 @@ class Main {
             
             $dbStorage = $this->getDbStorage();
                     
-            foreach ($d->getElementsByTagName('a') as $url) {
+            foreach ($d->getElementsByTagName('a') as $i => $url) {
                 $href = $url->getAttribute('href');
 
                 if (isset($href) && strlen($href)) {
@@ -102,7 +102,7 @@ class Main {
                     $curl = $this->runCurl($hrefUrl);
                     
                     $this->setSpideredInformation($curl, $dbStorage);
-
+                    
                     $output = $curl->getOutput()[0][1];
                     
                     $curl->close();
@@ -110,9 +110,14 @@ class Main {
                     if ($this->getContent($output) === FALSE) {
                         break;
                     }
+                    
+                    if ($i % 10 === 0) {
+                        $dbStorage->insert();
+                        $dbStorage = $this->getDbStorage();
+                    }
                 }
             }
-
+            
             $dbStorage->insert();
             
             return TRUE;
