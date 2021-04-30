@@ -12,6 +12,7 @@ class CurlHTTPWebSpiderModel extends MySQL\MySQLModel {
     protected $response_time;
     protected $redirect_count;
     protected $response_length;
+    protected $response_body;
     protected $content_type;
     protected $config = [
         'id' => [
@@ -44,7 +45,7 @@ class CurlHTTPWebSpiderModel extends MySQL\MySQLModel {
             FILTER_SANITIZE_STRING
         ],
         'response_body' => [
-            FILTER_VALIDATE_STRING
+            FILTER_SANITIZE_STRING
         ]
     ];
     
