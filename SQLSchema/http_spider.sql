@@ -29,7 +29,7 @@ CREATE TABLE `spidered_site` (
   `response_time` float(20,19) NOT NULL,
   `redirect_count` smallint unsigned NOT NULL,
   `response_length` int NOT NULL,
-  `response_body` MEDIUMTEXT,
+  `response_body` mediumtext,
   `content_type` varchar(400) NOT NULL
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1813 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

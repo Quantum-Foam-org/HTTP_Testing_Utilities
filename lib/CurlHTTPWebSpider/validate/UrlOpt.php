@@ -1,6 +1,6 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\curlHTTPWebSpider\validate;
+namespace HTTPTestingUtilities\lib\CurlHTTPWebSpider\validate;
 
 use cli\classes as cli;
 use common\url\Main as url;
@@ -9,7 +9,7 @@ class UrlOpt extends cli\Flag
 {
     protected $startUrl;
     
-    protected $db;
+    protected $db = 'mysql';
 
     protected $config =[
         'startUrl' => 

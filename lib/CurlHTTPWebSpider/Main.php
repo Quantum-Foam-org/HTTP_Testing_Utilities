@@ -10,7 +10,7 @@ use common\db\PDO\Main as PDO;
 use common\logging\Logger;
 use HTTPTestingUtilities\lib\curlHTTPWebSpider\db\MySQL as local_MySQL;
 use common\db\dbModelInterface;
-use common\collections\DataStorage;
+use common\collections\db as DataStorage;
 
 class Main {
     private $getContentLimit = 0;
@@ -183,7 +183,7 @@ class Main {
         global $uo;
 
         if ($uo->db === 'mysql') {
-            $dbStorage = new DataStorage\MySql\DbModelStorage();
+            $dbStorage = new DataStorage\MySQL\DbModelStorage();
         } else if ($uo->db === 'mongo') {
             $dbStorage = new DataStorage\Mongo\DbModelStorage();
         }
