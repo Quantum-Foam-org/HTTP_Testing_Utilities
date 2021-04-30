@@ -3,7 +3,7 @@
 namespace HTTPTestingUtilities\lib\curlHTTPWebSpider;
 
 use common\Config;
-use common\curl;
+use common\curl\Main as curl;
 use common\url\Main as url;
 use common\db\PDO\Main as PDO;
 #use \common\db\Mongo as Mongo;
@@ -25,10 +25,10 @@ class Main {
         $this->whiteListExtension = Config::obj()->system['whiteListExtension'];
     }
 
-    public function runCurl(url $url): curl\Main {
+    public function runCurl(url $url): curl {
         $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
 
-        $curl = new curl\Main(false);
+        $curl = new curl(false);
 
         $cookieFile = __DIR__ . '/http_cookies.txt';
         touch($cookieFile);
@@ -119,7 +119,10 @@ class Main {
         }
     }
     
-    private function setSpideredInformation(curl $curl, DbModelStorage $dbStorage) : void {
+    private function setSpideredInformation(
+            curl $curl, 
+            DataStorage\AbstractDbModelStorage $dbStorage
+    ) : void {
         $dbModel = $this->getDbModel();
                     
         $info = $this->getCurlInfo($curl);
@@ -158,6 +161,8 @@ class Main {
     }
     
     private function getDbModel() : DbModelInterface {
+        global $uo;
+        
         if ($uo->db === 'mysql') {
             try {
                 $db = PDO::obj();
