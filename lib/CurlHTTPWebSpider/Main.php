@@ -60,7 +60,9 @@ class Main {
             $dx = new \DOMXPath($d);
             
             $dbStorage = $this->getDbStorage();
-                    
+            
+            $pageCount = 0;
+            
             foreach ($d->getElementsByTagName('a') as $i => $url) {
                 $href = $url->getAttribute('href');
 
@@ -103,15 +105,11 @@ class Main {
                     
                     $this->setSpideredInformation($curl, $dbStorage);
                     
-                    $output = $curl->getOutput()[0][1];
-                    
                     $curl->close();
                     
-                    if ($this->getContent($output) === FALSE) {
-                        break;
-                    }
+                    $pageCount++;
                     
-                    if ($i % 10 === 0) {
+                    if ($pageCount % 10 === 0) {
                         $dbStorage->insert();
                         $dbStorage = $this->getDbStorage();
                     }
@@ -138,7 +136,7 @@ class Main {
             $dbModel->response_time = $info[CURLINFO_TOTAL_TIME][1];
             $dbModel->redirect_count = $info[CURLINFO_REDIRECT_COUNT][1];
             $dbModel->response_length = $info[CURLINFO_REQUEST_SIZE][1];
-            $dbModel->response_body = $curl->getOutput();
+            $dbModel->response_body = $curl->getOutput()[0][1];
             $dbModel->content_type = $info[CURLINFO_CONTENT_TYPE][1];
         } catch (\UnexpectedValueException | \OutOfBoundsException $e) {
             exit(Logger::obj()->writeException($e));
