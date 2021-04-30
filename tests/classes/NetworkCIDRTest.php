@@ -3,7 +3,7 @@
 namespace HTTPTestingUtilities\tests;
 
 use common\logging\Logger as Logger;
-use lib\validate;
+use HTTPTestingUtilities\lib\network\validate;
 
 class NetworkCIDRTest {
     
