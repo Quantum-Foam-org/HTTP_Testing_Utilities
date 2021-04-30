@@ -13,19 +13,19 @@ require ($php_cli_autoload_file);
 require ('./lib/autoload.php');
 
 use common\Config;
-use HTTPTestingUtilities\lib\CurlHttpWebSpider;
+use HTTPTestingUtilities\lib\CurlHTTPWebSpider;
 
 Config::obj(__DIR__ . '/config/config.ini');
 
 try {
-    $uo = new CurlHttpWebSpider\validate\UrlOpt();
+    $uo = new CurlHTTPWebSpider\validate\UrlOpt();
     $uo->exchangeArray(array_slice($_SERVER['argv'], 1));
 } catch (\UnexpectedValueException | \ArgumentCountError $e) {
     exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
 }
 
 if ($uo->startUrl !== null) {
-    $wsm = new CurlHttpWebSpider\Main();
+    $wsm = new CurlHTTPWebSpider\Main();
     $curl = $wsm->runCurl($uo->startUrl);
     $wsm->getContent($curl->getOutput()[0][1]);
     $curl->close();

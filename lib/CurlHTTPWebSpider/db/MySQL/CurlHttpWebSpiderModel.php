@@ -1,6 +1,6 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\curlHTTPWebSpider\db\MySQL;
+namespace HTTPTestingUtilities\lib\CurlHTTPWebSpider\db\MySQL;
 
 use common\db\MySQL;
 
