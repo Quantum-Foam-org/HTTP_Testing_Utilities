@@ -5,8 +5,10 @@ namespace HTTPTestingUtilities\lib\CurlHeaderOutput;
 use common\curl;
 
 class Main {
+    
+    private $curlInfo;
 
-    public static function run(string $url) : array {
+    public static function run(string $url) : bool {
         
         $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
         $fileHeader = fopen(__DIR__ . '/http_headers.txt', 'w+');
@@ -24,7 +26,7 @@ class Main {
         $curl->addOption(CURLOPT_COOKIEJAR, $cookieFile);
         $curl->addOption(CURLOPT_USERAGENT, $ua);
 
-        $curl->run();
+        $curlResult = $curl->run();
         $response = $curl->getOutput();
 
         $info = $curl->info();
@@ -46,26 +48,37 @@ class Main {
         }
         unset($row);
 
-        $curlInfo[] = sprintf("Initial URL: %s\n", $url);
+        $this->curlInfo['initial_url'] = $url;
         foreach ($info as $i) {
             switch ($i[0]) {
                 case CURLINFO_EFFECTIVE_URL:
-                    $text = 'Effective URL';
+                    $this->curlInfo['effective_url'] = $i[1];
                     break;
                 case CURLINFO_REDIRECT_COUNT:
-                    $text = 'Redirect Count';
+                    $this->curlInfo['redirect_count'] = $i[1];
                     break;
                 case CURLINFO_REDIRECT_TIME;
-                    $text = 'Redirect Time';
+                    $this->curlInfo['redirect_time'] = $i[1];
                     break;
             }
-            $curlInfo[] = sprintf("%s: %s\n", $text, $i[1]);
         }
         
         
         fclose($fileHeader);
         
-        return [$curlInfo, $locations, $cookieFile];
+        $this->curlInfo['locations'] = $locations;
+        $this->curlInfo['cookie_file'] = $cookieFile;
+        $this->curlInfo['header_file'] = $fileHeader;
+        
+        return (bool)$curlResult;
+    }
+    
+    public function __get($name) {
+        if (!isset($this->curlInfo[$name])) {
+            throw new \UnexpectedValueException(sprintf('Property %s not found', $name));
+        }
+        
+        return $this->curlInfo[$name];
     }
 
 }

@@ -1,22 +1,55 @@
 HTTP/1.1 301 Moved Permanently
-Date: Wed, 18 Jul 2018 17:53:52 GMT
-Transfer-Encoding: chunked
-Connection: keep-alive
-Cache-Control: max-age=3600
-Expires: Wed, 18 Jul 2018 18:53:52 GMT
-Location: https://www.acor.com/
-Server: cloudflare
-CF-RAY: 43c6cf7045fe5717-IAD
+Location: https://www.google.com/gmail/
+Content-Type: text/html; charset=UTF-8
+X-Content-Type-Options: nosniff
+Date: Thu, 25 Feb 2021 21:29:56 GMT
+Expires: Thu, 25 Feb 2021 21:59:56 GMT
+Server: sffe
+Content-Length: 226
+X-XSS-Protection: 0
+Cache-Control: public, max-age=1800
+Age: 883
 
-HTTP/1.1 200 OK
-Date: Wed, 18 Jul 2018 17:53:53 GMT
-Content-Type: text/html
-Transfer-Encoding: chunked
-Connection: keep-alive
-Set-Cookie: __cfduid=dfac79ae15ea4d282eab50b4cec78d40e1531936432; expires=Thu, 18-Jul-19 17:53:52 GMT; path=/; domain=.acor.com; HttpOnly; Secure
-X-Powered-By: PHP/5.3.29
-Age: 2
-Expect-CT: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
-Server: cloudflare
-CF-RAY: 43c6cf71996f9598-IAD
+HTTP/2 302 
+location: https://mail.google.com/mail/
+cache-control: private
+content-type: text/html; charset=UTF-8
+x-content-type-options: nosniff
+date: Thu, 25 Feb 2021 21:44:39 GMT
+server: sffe
+content-length: 226
+x-xss-protection: 0
+alt-svc: h3-29=":443"; ma=2592000,h3-T051=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+
+HTTP/2 302 
+content-type: text/html; charset=UTF-8
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: Mon, 01 Jan 1990 00:00:00 GMT
+date: Thu, 25 Feb 2021 21:44:39 GMT
+location: https://accounts.google.com/ServiceLogin?service=mail&passive=true&continue=https://mail.google.com/mail/&ss=1&scc=1&ltmpl=ecobx&nui=5&btmpl=mobile&emr=1&osid=1#
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+content-security-policy: frame-ancestors 'self'
+x-xss-protection: 1; mode=block
+server: GSE
+alt-svc: clear
+accept-ranges: none
+vary: Accept-Encoding
+
+HTTP/2 200 
+content-type: text/html; charset=UTF-8
+x-frame-options: DENY
+link: <https://www.google.com/gmail/>; rel="canonical"
+x-auto-login: realm=com.google&args=service%3Dmail%26continue%3Dhttps%253A%252F%252Fmail.google.com%252Fmail%252F
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: Mon, 01 Jan 1990 00:00:00 GMT
+date: Thu, 25 Feb 2021 21:44:40 GMT
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+server: GSE
+set-cookie: __Host-GAPS=1:vkBPzmBt6Qgy2WTJP0ai0WkakMI_wQ:TB0xMMjHK9pxT8Jn;Path=/;Expires=Sat, 25-Feb-2023 21:44:40 GMT;Secure;HttpOnly;Priority=HIGH
+alt-svc: h3-29=":443"; ma=2592000,h3-T051=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
 

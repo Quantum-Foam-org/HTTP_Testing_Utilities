@@ -1,10 +1,10 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\WWWScraper\db\MySQL;
+namespace HTTPTestingUtilities\lib\curlHTTPWebSpider\db\MySQL;
 
 use common\db\MySQL;
 
-class ScraperModel extends MySQL\MySQLModel {
+class CurlHttpWebSpiderModel extends MySQL\MySQLModel {
 
     protected $id;
     protected $url;
@@ -42,6 +42,9 @@ class ScraperModel extends MySQL\MySQLModel {
         ],
         'content_type' => [
             FILTER_SANITIZE_STRING
+        ],
+        'response_body' => [
+            FILTER_VALIDATE_STRING
         ]
     ];
     

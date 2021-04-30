@@ -1,6 +1,6 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\WWWScraper;
+namespace HTTPTestingUtilities\lib\curlHTTPWebSpider;
 
 use common\Config;
 use common\curl;
@@ -8,7 +8,9 @@ use common\url\Main as url;
 use common\db\PDO\Main as PDO;
 #use \common\db\Mongo as Mongo;
 use common\logging\Logger;
-use HTTPTestingUtilities\lib\WWWScraper\db\MySQL as local_MySQL;
+use HTTPTestingUtilities\lib\curlHTTPWebSpider\db\MySQL as local_MySQL;
+use common\db\dbModelInterface;
+use common\collections\DataStorage;
 
 class Main {
     private $getContentLimit = 0;
@@ -56,6 +58,9 @@ class Main {
             $d = new \DomDocument();
             @$d->loadHTML($content);
             $dx = new \DOMXPath($d);
+            
+            $dbStorage = $this->getDbStorage();
+                    
             foreach ($d->getElementsByTagName('a') as $url) {
                 $href = $url->getAttribute('href');
 
@@ -85,14 +90,57 @@ class Main {
                     $this->previousUrls[] = (string) $hrefUrl;
 
                     $path = pathinfo($hrefUrl, PATHINFO_EXTENSION);
-                    if (strlen($path) > 0 && !($wle = array_search($path, $this->whiteListExtension))) {
+                    if (strlen($path) > 0 && 
+                            !($wle = array_search(
+                                    $path, 
+                                    $this->whiteListExtension))
+                    ) {
                         $this->unkownExtension[] = $path;
                         continue;
                     }
 
                     $curl = $this->runCurl($hrefUrl);
+                    
+                    $this->setSpideredInformation($curl, $dbStorage);
 
-                    $info = array_filter($curl->info()[0], function ($v) {
+                    $output = $curl->getOutput()[0][1];
+                    
+                    $curl->close();
+                    
+                    if ($this->getContent($output) === FALSE) {
+                        break;
+                    }
+                }
+            }
+
+            $dbStorage->insert();
+            
+            return TRUE;
+        }
+    }
+    
+    private function setSpideredInformation(curl $curl, DbModelStorage $dbStorage) : void {
+        $dbModel = $this->getDbModel();
+                    
+        $info = $this->getCurlInfo($curl);
+        
+        try {
+            $dbModel->url = $info[CURLINFO_EFFECTIVE_URL][1];
+            $dbModel->http_status_code = $info[CURLINFO_HTTP_CODE][1];
+            $dbModel->response_time = $info[CURLINFO_TOTAL_TIME][1];
+            $dbModel->redirect_count = $info[CURLINFO_REDIRECT_COUNT][1];
+            $dbModel->response_length = $info[CURLINFO_REQUEST_SIZE][1];
+            $dbModel->response_content = $curl->getOutput();
+            $dbModel->content_type = $info[CURLINFO_CONTENT_TYPE][1];
+        } catch (\UnexpectedValueException $e) {
+            exit(Logger::obj()->writeException($e));
+        }
+        
+        $dbStorage[] = $dbModel;
+    }
+
+    private function getCurlInfo(curl $curl): array {
+        return array_filter($curl->info()[0], function ($v) {
                         if (in_array($v[0], array(
                                     CURLINFO_EFFECTIVE_URL,
                                     CURLINFO_HTTP_CODE,
@@ -107,62 +155,42 @@ class Main {
                         }
                         return $result;
                     });
-                    if ($uo->db === 'mysql') {
-                        try {
-                            $db = PDO::obj();
-                        } catch (\PDOException $pe) {
-                            exit(Logger::obj()->writeException($pe, -1, TRUE));
-                        }
-
-                        $dbModel = new local_MySQL\ScraperModel();
-                    } else if ($uo->db === 'mongo') {
-                        try {
-                            $db = Mongo::obj();
-                        } catch (\MongoDB\Driver\Exception\InvalidArgumentException | \MongoDB\Driver\Exception\RuntimeException $pe) {
-                            exit(Logger::obj()->writeException($pe, -1, TRUE));
-                        }
-
-                        $dbModel = new Mongo\ScraperModel();
-                    }
-
-                    try {
-                        $dbModel->url = $info[CURLINFO_EFFECTIVE_URL][1];
-                        $dbModel->http_status_code = $info[CURLINFO_HTTP_CODE][1];
-                        $dbModel->response_time = $info[CURLINFO_TOTAL_TIME][1];
-                        $dbModel->redirect_count = $info[CURLINFO_REDIRECT_COUNT][1];
-                        $dbModel->response_length = $info[CURLINFO_REQUEST_SIZE][1];
-                        $dbModel->content_type = $info[CURLINFO_CONTENT_TYPE][1];
-                    } catch (\UnexpectedValueException $e) {
-                        exit(Logger::obj()->writeException($e));
-                    }
-
-                    $result = $dbModel->insert();
-
-                    if ($uo->db === 'mysql' && !is_int($result)) {
-                        exit(Logger::obj()->write(
-                                        'Could not insert spider information into MySQL database', -1));
-                    } else if ($uo->db === 'mongo' &&
-                            $result instanceOf WriteResult &&
-                            (
-                            $result->getInsertedCount() !== 1 ||
-                            count($result->getWriteErrors()) > 0
-                            )
-                    ) {
-                        exit(Logger::obj()->write(
-                                        'Could not insert spider information into Mongo database', -1));
-                    }
-
-                    $output = $curl->getOutput()[0][1];
-                    $curl->close();
-                    if ($this->getContent($output) === FALSE)
-                        break;
-                }
+    }
+    
+    private function getDbModel() : DbModelInterface {
+        if ($uo->db === 'mysql') {
+            try {
+                $db = PDO::obj();
+            } catch (\PDOException $pe) {
+                exit(Logger::obj()->writeException($pe, -1, TRUE));
             }
 
-            return TRUE;
-        }
-    }
+            $dbModel = new local_MySQL\CurlHttpWebSpiderModel();
+        } else if ($uo->db === 'mongo') {
+            try {
+                $db = Mongo::obj();
+            } catch (\MongoDB\Driver\Exception\InvalidArgumentException | \MongoDB\Driver\Exception\RuntimeException $pe) {
+                exit(Logger::obj()->writeException($pe, -1, TRUE));
+            }
 
+            $dbModel = new Mongo\CurlHttpWebSpiderModel();
+        }
+
+        return $dbModel;
+    }
+    
+    private function getDbStorage() {
+        global $uo;
+
+        if ($uo->db === 'mysql') {
+            $dbStorage = new DataStorage\MySql\DbModelStorage();
+        } else if ($uo->db === 'mongo') {
+            $dbStorage = new DataStorage\Mongo\DbModelStorage();
+        }
+
+        return $dbStorage;
+    }
+    
     public function getunkownExtension() {
         if (!empty($this->unkownExtension)) {
             Logger::obj()->write('Begin Unkown Extensions');

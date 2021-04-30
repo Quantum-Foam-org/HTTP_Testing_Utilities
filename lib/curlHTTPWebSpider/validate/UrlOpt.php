@@ -1,6 +1,6 @@
 <?php
 
-namespace HTTPTestingUtilities\lib\WWWScraper\validate;
+namespace HTTPTestingUtilities\lib\curlHTTPWebSpider\validate;
 
 use cli\classes as cli;
 use common\url\Main as url;

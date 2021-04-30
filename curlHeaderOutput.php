@@ -16,6 +16,7 @@ require ('./lib/autoload.php');
 use common\curl;
 use HTTPTestingUtilities\lib\CurlHeaderOutput;
 use cli\classes as cli;
+use common\logging\Logger;
 
 \common\Config::obj(__DIR__ . '/config/config.ini');
 
@@ -26,23 +27,31 @@ if ($argc > 1) {
     try {
         $uo->exchangeArray(array_slice($argv, 1));
     } catch (\UnexpectedValueException $e) {
-        exit(\common\logging\Logger::obj()->writeException($e, -1, TRUE));
+        exit(Logger::obj()->writeException($e, -1, TRUE));
     }
     $uo->exchangeArray(array_slice($argv, 1));
     if ($uo->url !== FALSE) {
-        [$curlHeaderInfo, $locations, $cookieFile] = CurlHeaderOutput\Main::run($uo->url);
+        if(CurlHeaderOutput\Main::run($uo->url) === true) {
+            try {
+            sprintf("Initial URL: %s\n", $curl->initial_url);
+            sprintf("Effective URL: %s\n", $curl->effective_url);
+            sprintf("Redirect Count: %s\n", $curl->redirect_count);
+            sprintf("Redirect Time: %s\n\n", $curl->redirect_time);
+            sprintf("Locations:\n\t%s\n\n", implode("\n\t", $curl->locations));
+            sprintf("HTTP Cookie Data:\n\t%s\n", implode("\n\t", array_map('trim', file($curl->cookieFile))));
+            } catch(\UnexpectedValueException $ue) {
+                exit(Logger::obj()->writeException($ue, -1, true));
+            }
+        } else {
+            echo "Unable to curl the web resource\n";
+        }
         
-        echo implode("\n", $curlHeaderInfo);
-        echo "\n";
-        echo "Locations:\n\t" . implode("\n\t", $locations) . "\n\n";
-        echo "HTTP Cookie Data:\n\t" . implode("\n\t", array_map('trim', file($cookieFile))) . "\n";
-
         $return = 0;
     }
 }
 
 if ($return !== 0) {
-    echo "Please supply a valid URL via the --url option";
+    echo "Please supply a valid URL via the --url option\n";
 }
 
 
