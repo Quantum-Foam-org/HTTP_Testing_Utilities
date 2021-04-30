@@ -61,8 +61,6 @@ class Main {
             
             $dbStorage = $this->getDbStorage();
             
-            $pageCount = 0;
-            
             foreach ($d->getElementsByTagName('a') as $i => $url) {
                 $href = $url->getAttribute('href');
 
@@ -106,13 +104,6 @@ class Main {
                     $this->setSpideredInformation($curl, $dbStorage);
                     
                     $curl->close();
-                    
-                    $pageCount++;
-                    
-                    if ($pageCount % 10 === 0) {
-                        $dbStorage->insert();
-                        $dbStorage = $this->getDbStorage();
-                    }
                 }
             }
             
