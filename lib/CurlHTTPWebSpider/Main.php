@@ -170,7 +170,7 @@ class Main {
                 exit(Logger::obj()->writeException($pe, -1, TRUE));
             }
 
-            $dbModel = new local_MySQL\CurlHttpWebSpiderModel();
+            $dbModel = new local_MySQL\CurlHTTPWebSpiderModel();
         } else if ($uo->db === 'mongo') {
             try {
                 $db = Mongo::obj();
@@ -178,7 +178,7 @@ class Main {
                 exit(Logger::obj()->writeException($pe, -1, TRUE));
             }
 
-            $dbModel = new Mongo\CurlHttpWebSpiderModel();
+            $dbModel = new Mongo\CurlHTTPWebSpiderModel();
         }
 
         return $dbModel;
