@@ -4,7 +4,7 @@ namespace HTTPTestingUtilities\lib\CurlHTTPWebSpider\db\MySQL;
 
 use common\db\MySQL;
 
-class CurlHttpWebSpiderModel extends MySQL\MySQLModel {
+class CurlHTTPWebSpiderModel extends MySQL\MySQLModel {
 
     protected $id;
     protected $url;

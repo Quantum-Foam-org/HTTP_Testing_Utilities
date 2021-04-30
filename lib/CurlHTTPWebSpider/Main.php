@@ -8,7 +8,7 @@ use common\url\Main as url;
 use common\db\PDO\Main as PDO;
 #use \common\db\Mongo as Mongo;
 use common\logging\Logger;
-use HTTPTestingUtilities\lib\curlHTTPWebSpider\db\MySQL as local_MySQL;
+use HTTPTestingUtilities\lib\CurlHTTPWebSpider\db\MySQL as local_MySQL;
 use common\db\dbModelInterface;
 use common\collections\db as DataStorage;
 
