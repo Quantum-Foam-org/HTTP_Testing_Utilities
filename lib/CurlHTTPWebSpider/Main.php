@@ -9,7 +9,7 @@ use common\db\PDO\Main as PDO;
 #use \common\db\Mongo as Mongo;
 use common\logging\Logger;
 use HTTPTestingUtilities\lib\CurlHTTPWebSpider\db\MySQL as local_MySQL;
-use common\db\dbModelInterface;
+use common\db\DbModelInterface;
 use common\collections\db as DataStorage;
 
 class Main {
@@ -133,9 +133,9 @@ class Main {
             $dbModel->response_time = $info[CURLINFO_TOTAL_TIME][1];
             $dbModel->redirect_count = $info[CURLINFO_REDIRECT_COUNT][1];
             $dbModel->response_length = $info[CURLINFO_REQUEST_SIZE][1];
-            $dbModel->response_content = $curl->getOutput();
+            $dbModel->response_body = $curl->getOutput();
             $dbModel->content_type = $info[CURLINFO_CONTENT_TYPE][1];
-        } catch (\UnexpectedValueException $e) {
+        } catch (\UnexpectedValueException | \OutOfBoundsException $e) {
             exit(Logger::obj()->writeException($e));
         }
         
