@@ -3,6 +3,7 @@
 namespace HTTPTestingUtilities\lib\CurlHTTPWebSpider\db\MySQL;
 
 use common\db\MySQL;
+use HTTPTestingUtilities\lib\CurlHTTPWebSpider\filters\SanResponseBody;
 
 class CurlHTTPWebSpiderModel extends MySQL\MySQLModel {
 
@@ -45,10 +46,13 @@ class CurlHTTPWebSpiderModel extends MySQL\MySQLModel {
             FILTER_SANITIZE_STRING
         ],
         'response_body' => [
-            FILTER_SANITIZE_STRING
+            FILTER_CALLBACK,
+            [
+                'options' => 
+                'HTTPTestingUtilities\lib\CurlHTTPWebSpider\filters\SanResponseBody::validate'
+            ]
         ]
     ];
-    
     protected $tables = ['ss' => 'spidered_site'];
     protected $table = 'spidered_site';
 

@@ -15,7 +15,7 @@ class NetworkCIDRTest {
         try {
             $networkCIDR->ip = '101010101';
         } catch(\UnexpectedValueException $e) {
-            \common\logging\Logger::obj()->writeException($e);
+            Logger::obj()->writeException($e);
             
             $ipTest = true;
         }
@@ -31,7 +31,7 @@ class NetworkCIDRTest {
         try {
             $networkCIDR->ip = '10.10.1.1';
         } catch(\UnexpectedValueException $e) {
-            \common\logging\Logger::obj()->writeException($e);
+            Logger::obj()->writeException($e);
             
             $ipTest = false;
         }
@@ -47,7 +47,7 @@ class NetworkCIDRTest {
         try {
             $networkCIDR->cidr = '33';
         } catch(\UnexpectedValueException $e) {
-            \common\logging\Logger::obj()->writeException($e);
+            Logger::obj()->writeException($e);
             
             $CIDRTest = true;
         }
@@ -63,7 +63,7 @@ class NetworkCIDRTest {
         try {
             $networkCIDR->cidr = '2';
         } catch(\UnexpectedValueException $e) {
-            \common\logging\Logger::obj()->writeException($e);
+            Logger::obj()->writeException($e);
             
             $CIDRTest = false;
         }
