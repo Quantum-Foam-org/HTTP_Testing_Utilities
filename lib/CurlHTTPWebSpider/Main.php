@@ -26,7 +26,7 @@ class Main {
     }
 
     public function runCurl(url $url): curl {
-        $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
+        $ua = 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0';
 
         $curl = new curl(false);
 
@@ -91,9 +91,9 @@ class Main {
 
                     $path = pathinfo($hrefUrl, PATHINFO_EXTENSION);
                     if (strlen($path) > 0 && 
-                            !($wle = array_search(
+                            array_search(
                                     $path, 
-                                    $this->whiteListExtension))
+                                    $this->whiteListExtension) === false
                     ) {
                         $this->unkownExtension[] = $path;
                         continue;
