@@ -17,12 +17,18 @@ class Main {
     private $contentLimit = 0;
     private $previousUrls = [];
     private $whiteListExtension = [];
+    private $binaryContentTypes = [];
     private $unkownExtension = [];
 
     public function __construct() {
         $this->contentLimit = Config::obj()->system['contentLength'];
 
-        $this->whiteListExtension = Config::obj()->system['whiteListExtension'];
+        if (!empty(Config::obj()->system['whiteListExtension'])) {
+            $this->whiteListExtension = Config::obj()->system['whiteListExtension'];
+        }
+        if (!empty(Config::obj()->system['binaryContentTypes'])) {
+            $this->binaryContentTypes = Config::obj()->system['binaryContentTypes'];
+        }
     }
 
     public function runCurl(url $url): curl {
@@ -90,10 +96,13 @@ class Main {
                     $this->previousUrls[] = (string) $hrefUrl;
 
                     $path = pathinfo($hrefUrl, PATHINFO_EXTENSION);
-                    if (strlen($path) > 0 && 
+                    if (empty($this->whiteListExtension) || 
+                            (
+                            strlen($path) > 0 && 
                             array_search(
                                     $path, 
                                     $this->whiteListExtension) === false
+                            )
                     ) {
                         $this->unkownExtension[] = $path;
                         continue;
@@ -127,8 +136,13 @@ class Main {
             $dbModel->response_time = $info[CURLINFO_TOTAL_TIME][1];
             $dbModel->redirect_count = $info[CURLINFO_REDIRECT_COUNT][1];
             $dbModel->response_length = $info[CURLINFO_REQUEST_SIZE][1];
-            $dbModel->response_body = $curl->getOutput()[0][1];
             $dbModel->content_type = $info[CURLINFO_CONTENT_TYPE][1];
+            if (!empty($this->binaryContentTypes) && 
+                    in_array($dbModel->content_type, $this->binaryContentTypes)) {
+                $dbModel->binary_response_body = $curl->getOutput()[0][1];
+            } else {
+                $dbModel->response_body = $curl->getOutput()[0][1];
+            }
         } catch (\UnexpectedValueException | \OutOfBoundsException $e) {
             exit(Logger::obj()->writeException($e));
         }

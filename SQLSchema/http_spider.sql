@@ -34,10 +34,11 @@ CREATE TABLE `spidered_site` (
   `id` int NOT NULL AUTO_INCREMENT,
   `url` varchar(1500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `http_status_code` smallint NOT NULL,
-  `response_time` float(20,19) NOT NULL,
+  `response_time` decimal(30,26) NOT NULL,
   `redirect_count` smallint unsigned NOT NULL,
   `response_length` int NOT NULL,
   `response_body` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `binary_response_body` mediumblob,
   `content_type` varchar(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -52,4 +53,4 @@ CREATE TABLE `spidered_site` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-20 20:09:44
+-- Dump completed on 2021-06-04  2:18:30
