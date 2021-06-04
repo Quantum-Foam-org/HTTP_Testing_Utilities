@@ -34,12 +34,12 @@ if ($argc > 1) {
         $cho = new CurlHeaderOutput\Main();
         if($cho->run($uo->url) === true) {
             try {
-            sprintf("Initial URL: %s\n", $curl->initial_url);
-            sprintf("Effective URL: %s\n", $curl->effective_url);
-            sprintf("Redirect Count: %s\n", $curl->redirect_count);
-            sprintf("Redirect Time: %s\n\n", $curl->redirect_time);
-            sprintf("Locations:\n\t%s\n\n", implode("\n\t", $curl->locations));
-            sprintf("HTTP Cookie Data:\n\t%s\n", implode("\n\t", array_map('trim', file($curl->cookieFile))));
+            printf("Initial URL: %s\n", $cho->initial_url);
+            printf("Effective URL: %s\n", $cho->effective_url);
+            printf("Redirect Count: %s\n", $cho->redirect_count);
+            printf("Redirect Time: %s\n\n", $cho->redirect_time);
+            printf("Locations:\n\t%s\n\n", implode("\n\t", $cho->locations));
+            printf("HTTP Cookie Data:\n\t%s\n", implode("\n\t", array_map('trim', file($cho->cookie_file))));
             } catch(\UnexpectedValueException $ue) {
                 exit(Logger::obj()->writeException($ue, -1, true));
             }
