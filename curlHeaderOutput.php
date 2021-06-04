@@ -31,7 +31,8 @@ if ($argc > 1) {
     }
     $uo->exchangeArray(array_slice($argv, 1));
     if ($uo->url !== FALSE) {
-        if(CurlHeaderOutput\Main::run($uo->url) === true) {
+        $cho = new CurlHeaderOutput\Main();
+        if($cho->run($uo->url) === true) {
             try {
             sprintf("Initial URL: %s\n", $curl->initial_url);
             sprintf("Effective URL: %s\n", $curl->effective_url);

@@ -8,7 +8,7 @@ class Main {
     
     private $curlInfo;
 
-    public static function run(string $url) : bool {
+    public function run(string $url) : bool {
         
         $ua = 'Mozilla/5.0 (Android; Mobile; rv:30.0) Gecko/30.0 Firefox/30.0';
         $fileHeader = fopen(__DIR__ . '/http_headers.txt', 'w+');
