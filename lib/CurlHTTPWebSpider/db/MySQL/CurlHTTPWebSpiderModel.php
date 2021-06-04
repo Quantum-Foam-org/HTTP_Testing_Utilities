@@ -14,6 +14,7 @@ class CurlHTTPWebSpiderModel extends MySQL\MySQLModel {
     protected $redirect_count;
     protected $response_length;
     protected $response_body;
+    protected $binary_response_body;
     protected $content_type;
     protected $config = [
         'id' => [
@@ -31,7 +32,7 @@ class CurlHTTPWebSpiderModel extends MySQL\MySQLModel {
                     'max_range' => 599
                 ]
             ],
-            'message' => 'http_status_code values must be between 100 and 599'
+            'message' => 'http_status_code values must be between 100 and 599, %s returned'
         ],
         'response_time'=> [
             FILTER_VALIDATE_FLOAT
@@ -51,6 +52,9 @@ class CurlHTTPWebSpiderModel extends MySQL\MySQLModel {
                 'options' => 
                 'HTTPTestingUtilities\lib\CurlHTTPWebSpider\filters\SanResponseBody::validate'
             ]
+        ],
+        'binary_response_body' => [
+            FILTER_UNSAFE_RAW
         ]
     ];
     protected $tables = ['ss' => 'spidered_site'];
