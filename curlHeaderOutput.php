@@ -39,7 +39,8 @@ if ($argc > 1) {
             printf("Redirect Count: %s\n", $cho->redirect_count);
             printf("Redirect Time: %s\n\n", $cho->redirect_time);
             printf("Locations:\n\t%s\n\n", implode("\n\t", $cho->locations));
-            printf("HTTP Cookie Data:\n\t%s\n", implode("\n\t", array_map('trim', file($cho->cookie_file))));
+            printf("HTTP Cookie Data:\n\t%s\n", implode("\n\t", $cho->cookie_file));
+            printf("HTTP Header Data:\n\t%s\n", implode("\n\t", $cho->header_file));
             } catch(\UnexpectedValueException $ue) {
                 exit(Logger::obj()->writeException($ue, -1, true));
             }

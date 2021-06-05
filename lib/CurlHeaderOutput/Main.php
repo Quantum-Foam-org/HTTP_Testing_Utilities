@@ -6,7 +6,16 @@ use common\curl;
 
 class Main {
     
-    private $curlInfo;
+    private $curlInfo = [
+        'locations' => [],
+        'cookie_file' => [],
+        'header_file' => [],
+        'initial_url' => '',
+        'effective_url' => '',
+        'redirect_count' => '',
+        'redirect_time' => '',
+        
+    ];
 
     public function run(string $url) : bool {
         
@@ -27,10 +36,9 @@ class Main {
         $curl->addOption(CURLOPT_USERAGENT, $ua);
 
         $curlResult = $curl->run();
-        $response = $curl->getOutput();
-
-        $info = $curl->info();
-        $info = array_filter($info[0], function($v) {
+        #$response = $curl->getOutput();
+        
+        $info = array_filter($curl->info()[0], function($v) {
             if (in_array($v[0], array(CURLINFO_EFFECTIVE_URL, CURLINFO_REDIRECT_COUNT, CURLINFO_REDIRECT_TIME), TRUE)) {
                 $result = TRUE;
             } else {
@@ -40,13 +48,15 @@ class Main {
         $curl->close();
 
         rewind($fileHeader);
-        $locations = [];
         while (($row = fgets($fileHeader)) !== FALSE) {
             if (stripos(trim($row), 'location:') === 0) {
-                $locations[] = trim(str_ireplace('location:', '', $row));
+                $this->curlInfo['locations'][] = trim(str_ireplace('location:', '', $row));
             }
+            $this->curlInfo['header_file'][] = $row;
         }
         unset($row);
+        
+        fclose($fileHeader);
 
         $this->curlInfo['initial_url'] = $url;
         foreach ($info as $i) {
@@ -63,12 +73,7 @@ class Main {
             }
         }
         
-        
-        fclose($fileHeader);
-        
-        $this->curlInfo['locations'] = $locations;
-        $this->curlInfo['cookie_file'] = $cookieFile;
-        $this->curlInfo['header_file'] = $fileHeader;
+        $this->curlInfo['cookie_file'] = array_map('trim', file($cookieFile));
         
         return (bool)$curlResult;
     }
